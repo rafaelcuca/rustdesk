@@ -2513,10 +2513,13 @@ pub fn read_custom_client(config: &str) {
 #[inline]
 pub fn is_empty_uni_link(arg: &str) -> bool {
     let prefix = crate::get_uri_prefix();
-    if !arg.starts_with(&prefix) {
-        return false;
+    if arg.starts_with(&prefix) {
+        return arg[prefix.len()..].chars().all(|c| c == '/');
     }
-    arg[prefix.len()..].chars().all(|c| c == '/')
+    if arg.starts_with("rustdesk://") {
+        return arg["rustdesk://".len()..].chars().all(|c| c == '/');
+    }
+    false
 }
 
 pub fn get_hwid() -> Bytes {
